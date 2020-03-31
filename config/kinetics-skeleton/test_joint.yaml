@@ -1,0 +1,26 @@
+# feeder
+feeder: feeders.feeder.Feeder
+test_feeder_args:
+  data_path: ./data/kinetics/val_data_joint.npy
+  label_path: ./data/kinetics/val_label.pkl
+  debug: False
+
+# model
+model: model.msg3d.Model
+model_args:
+  num_class: 400
+  num_point: 18
+  num_person: 2
+  num_gcn_scales: 8
+  num_g3d_scales: 8
+  graph: graph.kinetics.AdjMatrixGraph
+
+
+# test
+phase: test
+device: 0
+test_batch_size: 32
+weights: ./pretrained_models/kinetics_joint.pt
+
+work_dir: ./eval/kinetics/joint/
+save_score: True

@@ -1,0 +1,26 @@
+# feeder
+feeder: feeders.feeder.Feeder
+test_feeder_args:
+  data_path: ./data/ntu/xview/val_data_bone.npy
+  label_path: ./data/ntu/xview/val_label.pkl
+  debug: False
+
+# model
+model: model.msg3d.Model
+model_args:
+  num_class: 60
+  num_point: 25
+  num_person: 2
+  num_gcn_scales: 13    # `num_scales` == `K + 1` in the paper
+  num_g3d_scales: 6
+  graph: graph.ntu_rgb_d.AdjMatrixGraph
+
+# test
+phase: test
+device: [0]
+test_batch_size: 32
+weights: ./pretrained_models/ntu60_xview_bone.pt
+
+
+work_dir: ./eval/ntu/xview/bone/
+save_score: True
