@@ -190,7 +190,7 @@ This repo is based on
   - [2s-AGCN](https://github.com/lshiwjx/2s-AGCN)
   - [ST-GCN](https://github.com/yysijie/st-gcn)
 
-Thanks to the original authors for their work
+Thanks to the original authors for their work!
 
 
 ## Citation
