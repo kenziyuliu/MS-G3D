@@ -12,18 +12,6 @@ from model.activation import activation_factory
 from graph.tools import k_adjacency, normalize_adjacency_matrix
 
 
-class BatchNormActivate(nn.Module):
-    def __init__(self, channels, activation='relu', activate_inplace=True):
-        super().__init__()
-        self.bn = nn.BatchNorm2d(channels)
-        self.act = activation_factory(activation, inplace=activate_inplace)
-
-    def forward(self, x):
-        x = self.bn(x)
-        x = self.act(x)
-        return x
-
-
 class UnfoldTemporalWindows(nn.Module):
     def __init__(self, window_size, window_stride, window_dilation=1):
         super().__init__()
@@ -45,73 +33,6 @@ class UnfoldTemporalWindows(nn.Module):
         x = x.view(N, C, self.window_size, -1, V).permute(0,1,3,2,4).contiguous()
         x = x.view(N, C, -1, self.window_size * V)
         return x
-
-
-class SpatialTemporal_MS_GCN_D(nn.Module):
-    def __init__(self,
-                 in_channels,
-                 out_channels,
-                 A_binary,
-                 num_scales,
-                 window_size,
-                 residual=False,
-                 use_Ares=False,
-                 dropout=0,
-                 activation='relu'):
-
-        super().__init__()
-        self.num_scales = num_scales
-        self.window_size = window_size
-        self.use_Ares = use_Ares
-        A = self.build_spatial_temporal_graph(A_binary, window_size)
-
-        # Disentangled aggregation
-        A_scales = [k_adjacency(A, k, with_self=True) for k in range(num_scales)]
-        A_scales = np.concatenate([normalize_adjacency_matrix(g) for g in A_scales])
-
-        self.A_scales = torch.Tensor(A_scales)
-        self.V = len(A_binary)
-
-        if use_Ares:
-            self.A_res = nn.init.uniform_(nn.Parameter(torch.randn(self.A_scales.shape)), -1e-6, 1e-6)
-        else:
-            self.A_res = torch.tensor(0)
-
-        self.mlp = MLP(in_channels * num_scales, [out_channels], dropout=dropout, activation='linear')
-
-        # Residual connection
-        if not residual:
-            self.residual = lambda x: 0
-        elif (in_channels == out_channels):
-            self.residual = lambda x: x
-        else:
-            self.residual = MLP(in_channels, [out_channels], activation='linear')
-
-        self.act = activation_factory(activation)
-
-    def build_spatial_temporal_graph(self, A_binary, window_size):
-        assert isinstance(A_binary, np.ndarray), 'A_binary should be of type `np.ndarray`'
-        V = len(A_binary)
-        V_large = V * window_size
-        A_binary_with_I = A_binary + np.eye(len(A_binary), dtype=A_binary.dtype)
-        # Build spatial-temporal graph
-        A_large = np.tile(A_binary_with_I, (window_size, window_size)).copy()
-        return A_large
-
-    def forward(self, x):
-        N, C, T, V = x.shape    # T = number of windows
-
-        # Build graphs
-        A = self.A_scales.to(x.dtype).to(x.device) + self.A_res.to(x.dtype).to(x.device)
-
-        # Perform Graph Convolution
-        res = self.residual(x)
-        agg = torch.einsum('vu,nctu->nctv', A, x)
-        agg = agg.view(N, C, T, self.num_scales, V)
-        agg = agg.permute(0,3,1,2,4).contiguous().view(N, self.num_scales*C, T, V)
-        out = self.mlp(agg)
-        out += res
-        return self.act(out)
 
 
 class SpatialTemporal_MS_GCN(nn.Module):
