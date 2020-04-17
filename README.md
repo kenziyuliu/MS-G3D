@@ -13,13 +13,15 @@ PDF: https://arxiv.org/pdf/2003.14111.pdf
 
 ## Data Preparation
 
+*Disk usage warning: after preprocessing, the total sizes of datasets are around 38GB, 77GB, 63GB for NTU RGB+D 60, NTU RGB+D 120, and Kinetics 400, respectively. The raw/intermediate sizes may be larger.*
+
 ### Download Datasets
 
 There are 3 datasets to download:
 
 - NTU RGB+D 60 Skeleton
 - NTU RGB+D 120 Skeleton
-- Kinetics Skeleton
+- Kinetics 400 Skeleton
 
 #### NTU RGB+D 60 and 120
 
@@ -87,11 +89,8 @@ Put downloaded data into the following directory structure:
 
 ## Pretrained Models
 
-- Download pretrained models here for producing the final results on NTU RGB+D 60, NTU RGB+D 120, Kinetics Skeleton 400.
+- Download pretrained models for producing the final results on NTU RGB+D 60, NTU RGB+D 120, Kinetics Skeleton 400: [[Dropbox](https://www.dropbox.com/s/9n9897cu1ft1khg/msg3d-pretrained-models.zip)][[GoogleDrive](https://drive.google.com/open?id=1y3VbEnINtyriy82apiTZJtBV1a3cywa-)]
 
-```
-wget https://www.dropbox.com/s/9n9897cu1ft1khg/msg3d-pretrained-models.zip
-```
 
 - Put the folder of pretrained models at repo root:
 
