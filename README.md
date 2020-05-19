@@ -89,7 +89,7 @@ Put downloaded data into the following directory structure:
 
 ## Pretrained Models
 
-- Download pretrained models for producing the final results on NTU RGB+D 60, NTU RGB+D 120, Kinetics Skeleton 400: [[Dropbox](https://www.dropbox.com/s/9n9897cu1ft1khg/msg3d-pretrained-models.zip)][[GoogleDrive](https://drive.google.com/open?id=1y3VbEnINtyriy82apiTZJtBV1a3cywa-)]
+- Download pretrained models for producing the final results on NTU RGB+D 60, NTU RGB+D 120, Kinetics Skeleton 400: [[Dropbox](https://www.dropbox.com/s/9n9897cu1ft1khg/msg3d-pretrained-models.zip)][[GoogleDrive](https://drive.google.com/open?id=1y3VbEnINtyriy82apiTZJtBV1a3cywa-)][[WeiYun](https://share.weiyun.com/DlR4Jse1)]
 
 
 - Put the folder of pretrained models at repo root:
@@ -200,7 +200,8 @@ Please cite this work if you find it useful:
 @inproceedings{liu2020disentangling,
   title={Disentangling and Unifying Graph Convolutions for Skeleton-Based Action Recognition},
   author={Liu, Ziyu and Zhang, Hongwen and Chen, Zhenghao and Wang, Zhiyong and Ouyang, Wanli},
-  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  booktitle={The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  month={June},
   year={2020},
 }
 ```
