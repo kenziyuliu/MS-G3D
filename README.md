@@ -3,6 +3,7 @@
 PyTorch implementation of "Disentangling and Unifying Graph Convolutions for Skeleton-Based Action Recognition", CVPR 2020.
 
 PDF: https://arxiv.org/pdf/2003.14111.pdf
+
 Demo: https://youtu.be/5TcHIIece38
 
 
