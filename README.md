@@ -3,6 +3,8 @@
 PyTorch implementation of "Disentangling and Unifying Graph Convolutions for Skeleton-Based Action Recognition", CVPR 2020.
 
 PDF: https://arxiv.org/pdf/2003.14111.pdf
+Demo: https://youtu.be/5TcHIIece38
+
 
 ## Dependencies
 
@@ -200,9 +202,9 @@ Please cite this work if you find it useful:
 @inproceedings{liu2020disentangling,
   title={Disentangling and Unifying Graph Convolutions for Skeleton-Based Action Recognition},
   author={Liu, Ziyu and Zhang, Hongwen and Chen, Zhenghao and Wang, Zhiyong and Ouyang, Wanli},
-  booktitle={The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-  month={June},
-  year={2020},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={143--152},
+  year={2020}
 }
 ```
 
