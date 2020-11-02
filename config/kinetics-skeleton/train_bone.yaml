@@ -23,17 +23,22 @@ model_args:
   graph: graph.kinetics.AdjMatrixGraph
 
 # optim
-# TODO: check the hyperparams
-weight_decay: 0.0005
-base_lr: 0.05
+# weight_decay: 0.0005
+weight_decay: 0.0003
+# base_lr: 0.05
+base_lr: 0.1
 step: [45, 55]
 
 # training
 num_epoch: 65
-device: [0, 1]
-batch_size: 32
-forward_batch_size: 32
-test_batch_size: 32
+# device: [0, 1]
+device: [0, 1, 2, 3]
+# batch_size: 32
+batch_size: 128
+# forward_batch_size: 32
+forward_batch_size: 64
+# test_batch_size: 32
+test_batch_size: 128
 nesterov: True
 
 
