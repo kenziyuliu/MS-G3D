@@ -12,7 +12,7 @@ from feeders import tools
 class Feeder(Dataset):
     def __init__(self, data_path, label_path,
                  random_choose=False, random_shift=False, random_move=False,
-                 window_size=-1, normalization=False, debug=False, use_mmap=True):
+                 window_size=-1, normalization=False, debug=False, use_mmap=True, is_test=True):
         """
         :param data_path:
         :param label_path:
@@ -34,6 +34,7 @@ class Feeder(Dataset):
         self.window_size = window_size
         self.normalization = normalization
         self.use_mmap = use_mmap
+        self.is_test = is_test
         self.load_data()
         if normalization:
             self.get_mean_map()
@@ -86,7 +87,10 @@ class Feeder(Dataset):
         if self.random_move:
             data_numpy = tools.random_move(data_numpy)
 
-        return data_numpy, label, index
+        if self.is_test:
+            return data_numpy, label, index
+        else:
+            return {"batchdata": torch.FloatTensor(data_numpy), "label": torch.LongTensor([label])}
 
     def top_k(self, score, top_k):
         rank = score.argsort()

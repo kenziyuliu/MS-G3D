@@ -130,6 +130,18 @@ python3 main.py
   [--eval-start <which epoch to start evaluating the model>]
 ```
 
+- The general distribute training template command:
+```
+python -m torch.distributed.launch --nproc_per_node=4 \
+  --config <config file>
+  --work-dir <place to keep things (weights, checkpoints, logs)>
+  --half   # Mixed precision training with NVIDIA Apex (default O1) for GPUs ~11GB memory
+  [--base-lr <base learning rate>]
+  [--batch-size <batch size>]
+  [--weight-decay <weight decay>]
+  [--forward-batch-size <batch size during forward pass, useful if using only 1 GPU>]
+```
+
 - The general testing template command:
 ```
 python3 main.py
@@ -162,11 +174,18 @@ python3 ensemble.py
     - `python3 main.py --config <...> --batch-size 32 --forward-batch-size 16 --device 0`
 
 - Resume training from checkpoint
+- Normal manner
 ```
 python3 main.py
   ...  # Same params as before
   --start-epoch <0 indexed epoch>
   --weights <weights in work_dir>
+  --checkpoint <checkpoint in work_dir>
+```
+- Distributed manner
+```
+python3 train.py
+  ...  # Same params as before
   --checkpoint <checkpoint in work_dir>
 ```
 
