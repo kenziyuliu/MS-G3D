@@ -30,7 +30,12 @@ model_args:
 # optim
 weight_decay: 0.0005
 base_lr: 0.05
-step: [30, 40]
+policy:
+  policy: 'step'
+  warmup_ratio: 0.01
+  warmup: 'linear'
+  warmup_iters: 600
+  step: [30, 40]
 
 # training
 num_epoch: 50

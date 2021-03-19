@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from utils import import_class, count_params
+from utils.tools import import_class, count_params
 from model.ms_gcn import MultiScale_GraphConv as MS_GCN
 from model.ms_tcn import MultiScale_TemporalConv as MS_TCN
 from model.ms_gtcn import SpatialTemporal_MS_GCN, UnfoldTemporalWindows
@@ -35,6 +35,8 @@ class MS_G3D(nn.Module):
             self.embed_channels_in = self.embed_channels_out = in_channels
             # The first STGC block changes channels right away; others change at collapse
             if in_channels == 3:
+                self.embed_channels_out = out_channels
+            elif in_channels == 8:
                 self.embed_channels_out = out_channels
         else:
             self.in1x1 = MLP(in_channels, [self.embed_channels_in])
@@ -124,9 +126,9 @@ class Model(nn.Module):
         c3 = c2 * 2     # 384
 
         # r=3 STGC blocks
-        self.gcn3d1 = MultiWindow_MS_G3D(3, c1, A_binary, num_g3d_scales, window_stride=1)
+        self.gcn3d1 = MultiWindow_MS_G3D(in_channels, c1, A_binary, num_g3d_scales, window_stride=1)
         self.sgcn1 = nn.Sequential(
-            MS_GCN(num_gcn_scales, 3, c1, A_binary, disentangled_agg=True),
+            MS_GCN(num_gcn_scales, in_channels, c1, A_binary, disentangled_agg=True),
             MS_TCN(c1, c1),
             MS_TCN(c1, c1))
         self.sgcn1[-1].act = nn.Identity()
