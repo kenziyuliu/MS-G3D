@@ -294,7 +294,7 @@ class Processor():
 
         if self.arg.weights:
             try:
-                self.global_step = int(arg.weights[:-3].split('-')[-1])
+                self.global_step = int(self.arg.weights[:-3].split('-')[-1])
             except:
                 print('Cannot parse global_step from model weights filename')
                 self.global_step = 0
