@@ -183,4 +183,4 @@ if __name__ == '__main__':
     
     end_t = time.time()
 
-    print(f"@@@ DONE all processing in {end_t - start_t}s @@@", flush=True)
+    print(f"@@@ DONE all processing in {end_t - start_t:.2f}s @@@", flush=True)
