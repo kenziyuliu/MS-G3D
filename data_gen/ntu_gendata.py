@@ -175,7 +175,6 @@ if __name__ == '__main__':
     print(f"Cores: {cpu_available} Available, {arg.n_cores} Chosen.", flush=True)
 
     start_t = time.time()
-    input('helloworld')
     pool = multiprocessing.Pool(arg.n_cores)
     pool.starmap(gendata, func_args)
     
