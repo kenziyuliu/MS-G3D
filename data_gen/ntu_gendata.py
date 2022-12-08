@@ -4,10 +4,10 @@ sys.path.extend(['../'])
 import pickle
 import argparse
 
-from tqdm import tqdm
-
 from data_gen.preprocess import pre_normalization
-
+import time
+from tqdm import tqdm
+import multiprocessing
 
 # https://arxiv.org/pdf/1604.02808.pdf, Section 3.2
 training_subjects = [
@@ -97,6 +97,7 @@ def read_xyz(file, max_body=4, num_joint=25):
 
 
 def gendata(data_path, out_path, ignored_sample_path=None, benchmark='xview', part='eval'):
+    print(f"### START GENERATION: benchmark {benchmark}, part {part}.", flush=True)
     if ignored_sample_path != None:
         with open(ignored_sample_path, 'r') as f:
             ignored_samples = [line.strip() + '.skeleton' for line in f.readlines()]
@@ -143,6 +144,7 @@ def gendata(data_path, out_path, ignored_sample_path=None, benchmark='xview', pa
     fp = pre_normalization(fp)
     np.save('{}/{}_data_joint.npy'.format(out_path, part), fp)
 
+    print(f"### DONE GENERATION: benchmark {benchmark}, part {part}.", flush=True)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='NTU-RGB-D Data Converter.')
@@ -150,20 +152,35 @@ if __name__ == '__main__':
     parser.add_argument('--ignored_sample_path',
                         default='../data/nturgbd_raw/NTU_RGBD_samples_with_missing_skeletons.txt')
     parser.add_argument('--out_folder', default='../data/ntu/')
+    parser.add_argument('--n_cores', default=1, type=int, help='Number of cores to run data generation by multiprocessing.')
 
     benchmark = ['xsub', 'xview']
     part = ['train', 'val']
     arg = parser.parse_args()
 
+    func_args = []
     for b in benchmark:
         for p in part:
             out_path = os.path.join(arg.out_folder, b)
             if not os.path.exists(out_path):
                 os.makedirs(out_path)
-            print(b, p)
-            gendata(
-                arg.data_path,
-                out_path,
-                arg.ignored_sample_path,
-                benchmark=b,
-                part=p)
+            
+            f_arg = (arg.data_path, out_path, arg.ignored_sample_path, b, p)
+            func_args.append(f_arg)
+
+    cpu_available = multiprocessing.cpu_count()
+    if arg.n_cores > 1:
+        num_args = len(func_args)
+        arg.n_cores = min(cpu_available, num_args, arg.n_cores)
+    print(f"Cores: {cpu_available} Available, {arg.n_cores} Chosen.", flush=True)
+
+    start_t = time.time()
+    pool = multiprocessing.Pool(arg.n_cores)
+    pool.starmap(gendata, func_args)
+    
+    pool.join()
+    pool.close()
+    
+    end_t = time.time()
+
+    print(f"@@@ DONE all processing in {end_t - start_t:.2f}s @@@", flush=True)
